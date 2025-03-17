@@ -29,13 +29,24 @@ if(isset($_GET['depart']) && isset($_GET['destination'])) {
 }
 ?>
 <!-- Modal HTML -->
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>recherche</title>
+ </head>
+ <body>
+    
+ 
 <div id="detailsModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <p id="modalContent"></p>
     </div>
 </div>
-
+</body>
+ </html>
 <script>
 function showDetails(trajet) {
     const modalContent = `
