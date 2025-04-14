@@ -1,4 +1,10 @@
-// Description: Page d'accueil du site web
+<?php
+session_start(); // Démarrer la session
+
+// Vérifier si l'utilisateur est connecté
+$isLoggedIn = isset($_SESSION['email']); // Supposons que $_SESSION['user'] contient les infos du user
+?>
+
 <!-- Modal HTML -->
 <div id="detailsModal" class="modal">
     <div class="modal-content">
@@ -6,7 +12,7 @@
         <p id="modalContent"></p>
     </div>
 </div>
-<h2>hhhhhhhhhhhhhhhhhhhhh</h2>
+
 <script>
 function showDetails(trajet) {
     const modalContent = `
@@ -18,6 +24,7 @@ function showDetails(trajet) {
         <strong>Marque du Véhicule :</strong> ${trajet.marque_vehicule}<br>
         <strong>Énergie utilisée :</strong> ${trajet.energie_vehicule}<br>
         <strong>Préférences du Conducteur :</strong> ${trajet.preferences_conducteur}
+        <button onclick="reserver()">Réserver</button>
     `;
     document.getElementById('modalContent').innerHTML = modalContent;
     document.getElementById('detailsModal').style.display = 'block';
@@ -74,7 +81,6 @@ window.onclick = function(event) {
 }
 </style>
 <?php
-include "config.php";
 
 if(isset($_GET['depart']) && isset($_GET['destination'])) {
     $depart = $_GET['depart'];
@@ -102,9 +108,11 @@ if(isset($_GET['depart']) && isset($_GET['destination'])) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoRide</title>
     <link rel="stylesheet" href="global.css" />
     <link rel="stylesheet" href="stylecss.css" />
     <link rel="stylesheet" href="index.css" />
@@ -116,9 +124,19 @@ if(isset($_GET['depart']) && isset($_GET['destination'])) {
         <div class="navigation-pill-list">
         <nav>
           <div class="navigation-pill"><div class="title"> <a href="index.php">Retour vers la page d’accueil</a></div></div>
-          <div class="title-wrapper"><div class="text-wrapper"><a href="covoiturage.php">Accès aux covoiturages</a></div></div>
+          <div class="title-wrapper"><div class="text-wrapper"><a href="#">Accès aux covoiturages</a></div></div>
           <div class="title-wrapper"><div class="text-wrapper"><a href="index.html">Contact</a></div></div>
-          <div class="title-wrapper"><div class="text-wrapper"><a href="./Formulaire/inscription/Inscription.php">Connexion</a></div></div>
+          <div class="title-wrapper">
+    <div class="text-wrapper">
+        <?php if ($isLoggedIn): ?>
+            <a href="compte.php">Compte</a> <!-- Redirige vers la page compte -->
+        <?php else: ?>
+            <a href="./Formulaire/inscription/Inscription.php">Connexion</a> <!-- Garde Connexion si pas connecté -->
+        <?php endif; ?>
+    </div>
+</div>
+
+          
         </div>
       </header>
       <div class="frame"></div>
@@ -127,7 +145,7 @@ if(isset($_GET['depart']) && isset($_GET['destination'])) {
           <div class="text-wrapper-2">EcoRide</div>
           <p class="subtitle">Le covoiturage le plus rentable</p>
         </div>
-         <h2>Recherche trajet:</h2>
+         <h2>Recherche un trajet:</h2>
 <div class="input-container">
 <input type="text" id="depart" placeholder="Départ">
 <input type="text" id="destination" placeholder="Destination">

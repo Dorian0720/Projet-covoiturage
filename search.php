@@ -1,11 +1,24 @@
 <?php
-include "config.php";
+$host = "localhost"; // Ou ton serveur MySQL
+$user = "root"; // Ton utilisateur MySQL
+$password = ""; // Ton mot de passe MySQL
+$dbname = "covoiturage"; // Nom de ta base de données
+
+$conn = new mysqli($host, $user, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connexion échouée : " . $conn->connect_error);
+}
+
 
 if(isset($_GET['depart']) && isset($_GET['destination'])) {
     $depart = $_GET['depart'];
     $destination = $_GET['destination'];
+    
 
-    $sql = "SELECT * FROM trajets WHERE depart = ? AND destination = ?";
+    $sql = "SELECT trajets.*, conducteurs.nom AS nom 
+        FROM trajets 
+        JOIN conducteurs ON trajets.conducteur_id = conducteurs.id 
+        WHERE trajets.depart = ? AND trajets.destination = ? AND trajets.Places > 0";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $depart, $destination);
     $stmt->execute();
@@ -18,9 +31,10 @@ if(isset($_GET['depart']) && isset($_GET['destination'])) {
             echo "<p><strong>Destination :</strong> " . $row["destination"] . "</p>";
             echo "<p><strong>Prix :</strong> " . $row["prix"] . " €</p>";
             echo "<p><strong>Date :</strong> " . $row["date_depart"] . "</p>";
-            echo "<p><strong>Conducteur :</strong> " . $row["conducteur"] . "</p>";
+            echo "<p><strong>Places disponibles :</strong> " . $row["Places"] . "</p>";
+            echo "<p><strong>Conducteur :</strong> " . $row["nom"] . "</p>";
             echo "<p><strong>Note du Conducteur :</strong> " . $row["note_conducteur"] . "/5</p>";
-            echo "<button onclick='showDetails(" . json_encode($row) . ")'>Détails</button>";
+            echo "<a href='detail.php?id=" . $row["id"] . "' class='details-button'>Voir Détails</a><br><br>";
             echo "</div>";
         }
     } else {
@@ -28,25 +42,7 @@ if(isset($_GET['depart']) && isset($_GET['destination'])) {
     }
 }
 ?>
-<!-- Modal HTML -->
- <!DOCTYPE html>
- <html lang="en">
- <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>recherche</title>
- </head>
- <body>
-    
- 
-<div id="detailsModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <p id="modalContent"></p>
-    </div>
-</div>
-</body>
- </html>
+
 <script>
 function showDetails(trajet) {
     const modalContent = `
@@ -93,44 +89,3 @@ function reserver() {
 }
 }
 </script>
-
-<style>
-/* Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-</style>
-
-<!-- Include the Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>

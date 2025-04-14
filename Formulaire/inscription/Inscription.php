@@ -36,11 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Déplacer l'image téléchargée vers le dossier
     if (move_uploaded_file($_FILES["photo"]["tmp_name"], $photo_chemin)) {
         // Insérer les données dans la base
-        $stmt = $conn->prepare("INSERT INTO utilisateur (nom, email, mot_de_passe, photo) VALUES (?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO utilisateurs (nom, email, mot_de_passe, photo_profil) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $nom, $email, $mot_de_passe, $photo_chemin);
 
         if ($stmt->execute()) {
-            echo "Inscription réussie ! <a href='conexion.php'>Connectez-vous ici</a>";
+            echo "Inscription réussie ! <a href='../conexion.php'>Connectez-vous ici</a>";
         } else {
             echo "Erreur : " . $stmt->error;
         }
@@ -78,7 +78,7 @@ $conn->close();
 
         <button type="submit">S'inscrire</button>
     </form>
-    <p>Vous s'avec deja un compte ? <a href="conexion.php">conexion</a> </p>
+    <p>Vous s'avec deja un compte ? <a href="../conexion.php">conexion</a></p>
 
 
     <style>
