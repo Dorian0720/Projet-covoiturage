@@ -72,20 +72,3 @@ window.onclick = function(event) {
         modal.style.display = 'none';
     }
     // Initialize and add the map
-function initMap(lat, lng) {
-    const location = { lat: parseFloat(lat), lng: parseFloat(lng) };
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
-        center: location,
-    });
-    const marker = new google.maps.Marker({
-        position: location,
-        map: map,
-    });
-}
-
-function reserver() {
-    alert("Réservation effectuée !");
-}
-}
-</script>

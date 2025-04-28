@@ -82,29 +82,30 @@ window.onclick = function(event) {
 </style>
 <?php
 
-if(isset($_GET['depart']) && isset($_GET['destination'])) {
-    $depart = $_GET['depart'];
-    $destination = $_GET['destination'];
+if (isset($_GET['depart']) && isset($_GET['destination'])) {
+    $depart = filter_input(INPUT_GET, 'depart', FILTER_SANITIZE_STRING);
+    $destination = filter_input(INPUT_GET, 'destination', FILTER_SANITIZE_STRING);
 
     $sql = "SELECT * FROM trajets WHERE depart = ? AND destination = ?";
     $stmt = $conn->prepare($sql);
+
+    if ($stmt === false) {
+        die('Erreur de préparation : ' . htmlspecialchars($conn->error));
+    }
+
     $stmt->bind_param("ss", $depart, $destination);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            echo "<div class='result-card'>";
-            echo "<p><strong>Départ :</strong> " . $row["depart"] . "</p>";
-            echo "<p><strong>Destination :</strong> " . $row["destination"] . "</p>";
-            echo "<p><strong>Prix :</strong> " . $row["prix"] . " €</p>";
-            echo "<p><strong>Date :</strong> " . $row["date_depart"] . "</p>";
-            echo "<p><strong>Conducteur :</strong> " . $row["conducteur"] . "</p>";
-            echo "</div>";
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            // Afficher les résultats
         }
     } else {
         echo "<p>Aucun trajet trouvé.</p>";
     }
+
+    $stmt->close();
 }
 ?>
 <!DOCTYPE html>
@@ -120,7 +121,6 @@ if(isset($_GET['depart']) && isset($_GET['destination'])) {
   <body>
     <div class="examples-home-page">
       <header class="header">
-        <div class="block"><img class="figma" src="./image/7657567.jpg" /></div>
         <div class="navigation-pill-list">
         <nav>
           <div class="navigation-pill"><div class="title"> <a href="index.php">Retour vers la page d’accueil</a></div></div>
@@ -149,7 +149,7 @@ if(isset($_GET['depart']) && isset($_GET['destination'])) {
 <div class="input-container">
 <input type="text" id="depart" placeholder="Départ">
 <input type="text" id="destination" placeholder="Destination">
-  <button onclick="rechercher()">Rechercher</button>
+  <button class="rechercher" onclick="rechercher()">Rechercher</button>
 </div>
 <div class="result-container">
 <h2>Résultat:</h2>
@@ -229,12 +229,12 @@ approche écologique</div>
       </div>
       <footer class="footer">
         <div class="title-2">
-          <img class="img" src="img/image.svg" />
+          <img class="img" src="" />
           <div class="button-list">
-            <img class="x-logo" src="img/x-logo.svg" />
-            <img class="img-2" src="img/logo-instagram.svg" />
-            <img class="img-2" src="img/logo-youtube.svg" />
-            <img class="img-2" src="img/linked-in.svg" />
+            <img class="x-logo" src="" />
+            <img class="img-2" src="" />
+            <img class="img-2" src="" />
+            <img class="img-2" src="" />
           </div>
         </div>
         <div class="text-link-list">
@@ -297,3 +297,104 @@ approche écologique</div>
     </script>
   </body>
 </html>
+
+<style>
+  /* Rendre le modal responsive */
+.modal-content {
+    width: 90%;
+    max-width: 600px;
+    margin: 10% auto;
+    box-sizing: border-box;
+}
+
+/* Input + bouton de recherche */
+.input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.input-container input,
+.input-container button {
+    padding: 10px;
+    font-size: 1em;
+    flex: 1 1 200px;
+    max-width: 300px;
+}
+
+.result-container {
+    padding: 10px;
+    text-align: center;
+}
+
+/* Cards résultats */
+.result-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px auto;
+    max-width: 600px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Navigation en responsive */
+.navigation-pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+}
+
+.navigation-pill a {
+    display: block;
+    padding: 8px 16px;
+    background: #f0f0f0;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #333;
+}
+
+/* Responsive grid & layout */
+.card-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+/* Footer responsive */
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    text-align: center;
+}
+
+.text-link-list {
+    flex: 1 1 200px;
+}
+
+/* Media queries pour petits écrans */
+@media (max-width: 768px) {
+    .text-content-title .text-wrapper-2 {
+        font-size: 1.8em;
+        text-align: center;
+    }
+
+    .subtitle {
+        text-align: center;
+    }
+
+    .navigation-pill-list {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+</style>

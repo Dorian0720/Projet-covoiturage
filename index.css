@@ -1,3 +1,4 @@
+
 .examples-home-page {
     display: flex;
     flex-direction: column;
@@ -412,15 +413,6 @@
     flex: 0 0 auto;
   }
   
-  .examples-home-page .avatar {
-    position: relative;
-    width: var(--size-icon-large);
-    height: var(--size-icon-large);
-    border-radius: var(--size-radius-full);
-    background-image: url(./img/shape-4.png);
-    background-size: cover;
-    background-position: 50% 50%;
-  }
   
   .examples-home-page .info {
     display: flex;
@@ -457,55 +449,12 @@
     font-style: var(--body-base-font-style);
   }
   
-  .examples-home-page .avatar-2 {
-    position: relative;
-    width: var(--size-icon-large);
-    height: var(--size-icon-large);
-    border-radius: var(--size-radius-full);
-    background-image: url(./img/shape.png);
-    background-size: cover;
-    background-position: 50% 50%;
-  }
+
   
-  .examples-home-page .avatar-3 {
-    position: relative;
-    width: var(--size-icon-large);
-    height: var(--size-icon-large);
-    border-radius: var(--size-radius-full);
-    background-image: url(./img/shape-2.png);
-    background-size: cover;
-    background-position: 50% 50%;
-  }
   
-  .examples-home-page .avatar-4 {
-    position: relative;
-    width: var(--size-icon-large);
-    height: var(--size-icon-large);
-    border-radius: var(--size-radius-full);
-    background-image: url(./img/shape-5.png);
-    background-size: cover;
-    background-position: 50% 50%;
-  }
   
-  .examples-home-page .avatar-5 {
-    position: relative;
-    width: var(--size-icon-large);
-    height: var(--size-icon-large);
-    border-radius: var(--size-radius-full);
-    background-image: url(./img/shape-3.png);
-    background-size: cover;
-    background-position: 50% 50%;
-  }
+
   
-  .examples-home-page .avatar-6 {
-    position: relative;
-    width: var(--size-icon-large);
-    height: var(--size-icon-large);
-    border-radius: var(--size-radius-full);
-    background-image: url(./img/image.png);
-    background-size: cover;
-    background-position: 50% 50%;
-  }
   
   .examples-home-page .footer {
     display: flex;
