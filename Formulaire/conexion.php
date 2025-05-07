@@ -3,10 +3,10 @@ session_start();
 
 $host = "localhost"; // Ou ton serveur MySQL
 $user = "root"; // Ton utilisateur MySQL
-$password = ""; // Ton mot de passe MySQL
+$pasword = ""; // Ton mot de passe MySQL
 $dbname = "covoiturage"; // Nom de ta base de données
 
-$conn = new mysqli($host, $user, $password, $dbname);
+$conn = new mysqli($host, $user, $pasword, $dbname);
 if ($conn->connect_error) {
     die("Connexion échouée : " . $conn->connect_error);
 }
@@ -14,12 +14,12 @@ if ($conn->connect_error) {
 $erreur = "";
 
 if (isset($_POST['button-valider'])) {
-    if (isset($_POST['email']) && isset($_POST['mot_de_passe'])) {
+    if (isset($_POST['email']) && isset($_POST['password'])) {
         $email = $_POST['email'];
-        $mot_de_passe = $_POST['mot_de_passe'];
+        $mot_de_passe = $_POST['password'];
 
         // Requête sécurisée avec requêtes préparées
-        $stmt = $conn->prepare("SELECT * FROM utilisateurs WHERE email = ?");
+        $stmt = $conn->prepare("SELECT * FROM utilisateur WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -27,7 +27,7 @@ if (isset($_POST['button-valider'])) {
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
             // Vérification du mot de passe haché
-            if (password_verify($mot_de_passe, $user['mot_de_passe'])) {
+            if (password_verify($mot_de_passe, $user['password'])) {
                 $_SESSION['email'] = $email;
                 header("location: ../index.php");
                 exit();
@@ -58,7 +58,7 @@ if (isset($_POST['button-valider'])) {
             <div class="heading">Sign In</div>
             <form action="" method="POST">
                 <input required class="input" type="email" name="email" placeholder="Email">
-                <input required class="input" type="password" name="mot_de_passe" placeholder="Mot de passe">
+                <input required class="input" type="password" name="password" placeholder="Mot de passe">
                 <input class="login-button" type="submit" value="Se connecter" name="button-valider">
                 <div class="footer">Don't have an account? <a href="inscription/Inscription.php">Sign Up</a></div>
             </form>

@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nom = htmlspecialchars($_POST["nom"]);
     $email = htmlspecialchars($_POST["email"]);
-    $mot_de_passe = password_hash($_POST["mot_de_passe"], PASSWORD_DEFAULT);
+    $mot_de_passe = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
     // Gestion de l'upload de la photo
     $dossier_upload = "uploads/";
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Déplacer l'image téléchargée vers le dossier
     if (move_uploaded_file($_FILES["photo"]["tmp_name"], $photo_chemin)) {
         // Insérer les données dans la base
-        $stmt = $conn->prepare("INSERT INTO utilisateurs (nom, email, mot_de_passe, photo_profil) VALUES (?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO utilisateur (nom, email, password, photo) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $nom, $email, $mot_de_passe, $photo_chemin);
 
         if ($stmt->execute()) {
@@ -71,7 +71,7 @@ $conn->close();
         <input type="email" name="email" required><br>
 
         <label>Mot de passe :</label>
-        <input type="password" name="mot_de_passe" required><br>
+        <input type="password" name="password" required><br>
 
         <label>Photo de profil :</label>
         <input type="file" name="photo" accept="image/*" required><br>

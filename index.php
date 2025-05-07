@@ -15,15 +15,16 @@ $isLoggedIn = isset($_SESSION['email']); // Supposons que $_SESSION['user'] cont
 
 <script>
 function showDetails(trajet) {
+    // Remplacez les valeurs ci-dessous par celles récupérées de la base de données
     const modalContent = `
-        <strong>Point de rendez-vous :</strong> ${trajet.point_rdv}<br>
-        <strong>Temps de trajet :</strong> ${trajet.temps_trajet} minutes<br>
-        <strong>Nombre de places disponibles :</strong> ${trajet.places_disponibles}<br>
-        <strong>Avis du Conducteur :</strong> ${trajet.avis_conducteur}<br>
-        <strong>Modèle du Véhicule :</strong> ${trajet.modele_vehicule}<br>
-        <strong>Marque du Véhicule :</strong> ${trajet.marque_vehicule}<br>
-        <strong>Énergie utilisée :</strong> ${trajet.energie_vehicule}<br>
-        <strong>Préférences du Conducteur :</strong> ${trajet.preferences_conducteur}
+        <strong>Point de rendez-vous :</strong> ${lieux_depart}<br>
+        <strong>Temps de trajet :</strong> ${date_arriver} minutes<br>
+        <strong>Nombre de places disponibles :</strong> ${nb_place}<br>
+        <strong>Avis du Conducteur :</strong> ${commentaire}<br>
+        <strong>Modèle du Véhicule :</strong> ${modele}<br>
+        <strong>Couleur du Véhicule :</strong> ${couleur}<br>
+        <strong>Énergie utilisée :</strong> ${energie}<br>
+        <strong>Préférences du Conducteur :</strong> ${statut}
         <button onclick="reserver()">Réserver</button>
     `;
     document.getElementById('modalContent').innerHTML = modalContent;
@@ -82,11 +83,11 @@ window.onclick = function(event) {
 </style>
 <?php
 
-if (isset($_GET['depart']) && isset($_GET['destination'])) {
-    $depart = filter_input(INPUT_GET, 'depart', FILTER_SANITIZE_STRING);
-    $destination = filter_input(INPUT_GET, 'destination', FILTER_SANITIZE_STRING);
+if (isset($_GET['lieux_depart']) && isset($_GET['lieux_arriver'])) {
+    $depart = filter_input(INPUT_GET, 'lieux_depart', FILTER_SANITIZE_STRING);
+    $destination = filter_input(INPUT_GET, 'lieux_arriver', FILTER_SANITIZE_STRING);
 
-    $sql = "SELECT * FROM trajets WHERE depart = ? AND destination = ?";
+    $sql = "SELECT * FROM covoiturage WHERE lieux_depart = ? AND lieux_arriver = ?";
     $stmt = $conn->prepare($sql);
 
     if ($stmt === false) {
@@ -147,8 +148,8 @@ if (isset($_GET['depart']) && isset($_GET['destination'])) {
         </div>
          <h2>Recherche un trajet:</h2>
 <div class="input-container">
-<input type="text" id="depart" placeholder="Départ">
-<input type="text" id="destination" placeholder="Destination">
+<input type="text" id="lieux_depart" placeholder="Départ">
+<input type="text" id="lieux_arriver" placeholder="Destination">
   <button class="rechercher" onclick="rechercher()">Rechercher</button>
 </div>
 <div class="result-container">
@@ -267,7 +268,7 @@ approche écologique</div>
           </div>
           <div class="text-link-list-item"><div class="list-item">Blog</div></div>
           <div class="text-link-list-item"><div class="list-item">Best practices</div></div>
-          <div class="text-link-list-item"><div class="list-item">Colors</div></div>
+          <div class="text-link-list-item"><div class="list-item">figma</div></div>
           <div class="text-link-list-item"><div class="list-item">Color wheel</div></div>
           <div class="text-link-list-item"><div class="list-item">Support</div></div>
           <div class="text-link-list-item"><div class="list-item">Developers</div></div>
@@ -276,24 +277,26 @@ approche écologique</div>
       </footer>
     </div>
     <script>
-        function rechercher() {
-            let depart = document.getElementById("depart").value;
-            let destination = document.getElementById("destination").value;
-            let resultDiv = document.getElementById("resultats");
+      function rechercher() {
+        let depart = document.getElementById("lieux_depart").value;
+        let destination = document.getElementById("lieux_arriver").value;
+        let resultDiv = document.getElementById("resultats");
 
-            if (depart && destination) {
-                let xhr = new XMLHttpRequest();
-                xhr.open("GET", "search.php?depart=" + depart + "&destination=" + destination, true);
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        resultDiv.innerHTML = xhr.responseText;
-                    }
-                };
-                xhr.send();
-            } else {
-                resultDiv.innerHTML = "<p>Veuillez remplir les champs.</p>";
-            }
+        if (depart && destination) {
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", "search.php?lieux_depart=" + encodeURIComponent(depart) + "&lieux_arriver=" + encodeURIComponent(destination), true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    resultDiv.innerHTML = xhr.responseText;
+                } else {
+                    resultDiv.innerHTML = "<p>Erreur lors de la recherche.</p>";
+                }
+            };
+            xhr.send();
+        } else {
+            resultDiv.innerHTML = "<p>Veuillez remplir les champs.</p>";
         }
+    }
     </script>
   </body>
 </html>

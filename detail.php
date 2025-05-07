@@ -98,11 +98,11 @@ $isLoggedIn = isset($_SESSION['email']); // Supposons que $_SESSION['user'] cont
         
             // Requête pour récupérer tous les détails du trajet
             
-            $sql = "SELECT t.*, v.marque, v.modele, v.energie, c.preferences, c.avis, c.photo_profil, c.nom, t.Places
-                    FROM trajets t
-                    JOIN vehicules v ON t.conducteur_id = v.conducteur_id
-                    JOIN conducteurs c ON t.conducteur_id = c.id
-                    WHERE t.id = ?";
+            $sql = "SELECT c.*, 
+                    FROM covoiturage
+                    JOIN vehicules v ON 
+                    JOIN utilisateur u ON 
+                    WHERE u.id = ?";
             
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $trajet_id);

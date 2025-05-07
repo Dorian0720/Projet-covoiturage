@@ -10,30 +10,34 @@ if ($conn->connect_error) {
 }
 
 
-if(isset($_GET['depart']) && isset($_GET['destination'])) {
-    $depart = $_GET['depart'];
-    $destination = $_GET['destination'];
+if (isset($_GET['lieux_depart']) && isset($_GET['lieux_arriver'])) {
+    $depart = filter_input(INPUT_GET, 'lieux_depart', FILTER_SANITIZE_STRING);
+    $destination = filter_input(INPUT_GET, 'lieux_arriver', FILTER_SANITIZE_STRING);
+
+    if (isset($_GET['lieux_depart']) && isset($_GET['lieux_arriver'])) {
+        $depart = filter_input(INPUT_GET, 'lieux_depart', FILTER_SANITIZE_STRING);
+        $destination = filter_input(INPUT_GET, 'lieux_arriver', FILTER_SANITIZE_STRING);
+    }
     
 
-    $sql = "SELECT trajets.*, conducteurs.nom AS nom 
-        FROM trajets 
-        JOIN conducteurs ON trajets.conducteur_id = conducteurs.id 
-        WHERE trajets.depart = ? AND trajets.destination = ? AND trajets.Places > 0";
+    $sql = "SELECT covoiturage.*
+        FROM covoiturage WHERE lieux_depart = ? AND lieux_arriver = ? AND nb_place > 0";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $depart, $destination);
+    
     $stmt->execute();
     $result = $stmt->get_result();
 
     if($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
             echo "<div class='result-card'>";
-            echo "<p><strong>Départ :</strong> " . $row["depart"] . "</p>";
-            echo "<p><strong>Destination :</strong> " . $row["destination"] . "</p>";
-            echo "<p><strong>Prix :</strong> " . $row["prix"] . " €</p>";
+            echo "<p><strong>Départ :</strong> " . $row["lieux_depart"] . "</p>";
+            echo "<p><strong>Destination :</strong> " . $row["lieux_arriver"] . "</p>";
+            echo "<p><strong>Prix :</strong> " . $row["prix_personne"] . " €</p>";
             echo "<p><strong>Date :</strong> " . $row["date_depart"] . "</p>";
-            echo "<p><strong>Places disponibles :</strong> " . $row["Places"] . "</p>";
-            echo "<p><strong>Conducteur :</strong> " . $row["nom"] . "</p>";
-            echo "<p><strong>Note du Conducteur :</strong> " . $row["note_conducteur"] . "/5</p>";
+            echo "<p><strong>Places disponibles :</strong> " . $row["nb_place"] . "</p>";
+            echo "<p><strong>Conducteur :</strong> " . $row["id"] . "</p>";
+            echo "<p><strong>Note du Conducteur :</strong> " . $row["statut"] . "/5</p>";
             echo "<a href='detail.php?id=" . $row["id"] . "' class='details-button'>Voir Détails</a><br><br>";
             echo "</div>";
         }
@@ -46,19 +50,18 @@ if(isset($_GET['depart']) && isset($_GET['destination'])) {
 <script>
 function showDetails(trajet) {
     const modalContent = `
-        <strong>Point de rendez-vous :</strong> ${trajet.point_rdv}<br>
-        <strong>Temps de trajet :</strong> ${trajet.temps_trajet} minutes<br>
-        <strong>Nombre de places disponibles :</strong> ${trajet.places_disponibles}<br>
-        <strong>Avis du Conducteur :</strong> ${trajet.avis_conducteur}<br>
-        <strong>Modèle du Véhicule :</strong> ${trajet.modele_vehicule}<br>
-        <strong>Marque du Véhicule :</strong> ${trajet.marque_vehicule}<br>
-        <strong>Énergie utilisée :</strong> ${trajet.energie_vehicule}<br>
-        <strong>Préférences du Conducteur :</strong> ${trajet.preferences_conducteur}
-         <div id="map" style="width:100%;height:200px;"></div>
+        <strong>Point de rendez-vous :</strong> ${covoiturage.lieux_depart}<br>
+        <strong>Temps de trajet :</strong> ${covoiturage.date_arriver} minutes<br>
+        <strong>Nombre de places disponibles :</strong> ${covoiturage.nb_place}<br>
+        <strong>Avis du Conducteur :</strong> ${avis.commentaire}<br>
+        <strong>Modèle du Véhicule :</strong> ${voiture.modele}<br>
+        <strong>Couleur du Véhicule :</strong> ${voiture.couleur}<br>
+        <strong>Énergie utilisée :</strong> ${voiture.energie}<br>
+        <strong>Préférences du Conducteur :</strong> ${covoiturage.}
+        <button onclick="reserver()">Réserver</button>
     `;
     document.getElementById('modalContent').innerHTML = modalContent;
     document.getElementById('detailsModal').style.display = 'block';
-    initMap(trajet.latitude, trajet.longitude);
 }
 
 function closeModal() {
