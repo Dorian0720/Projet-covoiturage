@@ -14,6 +14,8 @@ if ($conn->connect_error) {
 // Vérifier si le formulaire est soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nom = htmlspecialchars($_POST["nom"]);
+    $prenom = htmlspecialchars($_POST["prenom"]);
+    $pseudo = htmlspecialchars($_POST["pseudo"]);
     $email = htmlspecialchars($_POST["email"]);
     $mot_de_passe = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
@@ -36,8 +38,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Déplacer l'image téléchargée vers le dossier
     if (move_uploaded_file($_FILES["photo"]["tmp_name"], $photo_chemin)) {
         // Insérer les données dans la base
-        $stmt = $conn->prepare("INSERT INTO utilisateur (nom, email, password, photo) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $nom, $email, $mot_de_passe, $photo_chemin);
+$role_id = 2; // Passager par défaut
+
+$telephone = ""; // Champ vide pour le téléphone
+        $adresse = ""; // Champ vide pour l'adresse
+        // Préparer la requête d'insertion
+$stmt = $conn->prepare("INSERT INTO utilisateur (nom, prenom, email, password, photo, pseudo, telephone, adresse, role_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("ssssssssi", $nom, $prenom, $email, $mot_de_passe, $photo_chemin, $pseudo, $telephone, $adresse, $role_id);
+        
+
 
         if ($stmt->execute()) {
             echo "Inscription réussie ! <a href='../conexion.php'>Connectez-vous ici</a>";
@@ -60,12 +69,21 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
+
 </head>
 <body>
+    
+    <div class="container">
+        <form method="post" id="heading" enctype="multipart/form-data">
     <h2>Inscription</h2>
-    <form method="post" enctype="multipart/form-data">
         <label>Nom :</label>
         <input type="text" name="nom" required><br>
+
+        <label>Prénom :</label>
+        <input type="text" name="prenom" required><br>
+
+        <label>Pseudo :</label>
+        <input type="text" name="pseudo" required><br>
 
         <label>Email :</label>
         <input type="email" name="email" required><br>
@@ -96,10 +114,17 @@ body {
     width: 40%;
     margin: 50px auto;
     background: white;
-    padding: 20px;
+    padding: 2px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    
 }
+
+.heading {
+            font-size: 32px;
+            color: #333;
+            font-weight: bold;
+        }
 
 /* Titre */
 h2 {
@@ -156,6 +181,6 @@ button:hover {
     text-decoration: none;
 }
 
-    </style>
+</style>
 </body>
 </html>

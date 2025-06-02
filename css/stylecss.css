@@ -144,4 +144,65 @@
   }
 
 
-  
+  /* Responsive pour tablettes */
+@media (max-width: 900px) {
+  :root {
+    --responsive-device-width: 90vw;
+  }
+  .container {
+    width: 90%;
+    padding: 10px;
+  }
+  .modifier-section {
+    max-width: 95vw;
+    padding: 20px 10px;
+  }
+  .examples-home-page .header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+}
+
+/* Responsive pour mobiles */
+@media (max-width: 600px) {
+  :root {
+    --responsive-device-width: 100vw;
+  }
+  .container {
+    width: 98%;
+    padding: 5px;
+    border-radius: 0;
+  }
+  .modifier-section {
+    max-width: 100vw;
+    padding: 10px 2vw;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .examples-home-page .header,
+  .examples-home-page .navigation-pill-list {
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    width: 100vw;
+  }
+  .examples-home-page .title,
+  .examples-home-page .title-wrapper,
+  .examples-home-page .text-wrapper {
+    font-size: 1.1em;
+    white-space: normal;
+  }
+  .examples-home-page .hero-actions {
+    padding: 20px 2vw;
+  }
+  .examples-home-page .card-grid,
+  .examples-home-page .card-grid-2 {
+    padding: 8px;
+    gap: 12px;
+  }
+  .profil-photo-header img {
+    width: 40px;
+    height: 40px;
+  }
+}

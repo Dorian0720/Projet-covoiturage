@@ -1,4 +1,79 @@
 
+.container {
+  width: 40%;
+  margin: 50px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);}
+
+ .modifier-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 32px 24px;
+    max-width: 400px;
+    margin: 32px auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);}
+    
+.modifier-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.modifier-section label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.modifier-section input[type="text"],
+.modifier-section input[type="tel"],
+.modifier-section input[type="file"],
+.modifier-section select {
+    padding: 8px 10px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font-size: 1rem;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.modifier-section input[type="text"]:focus,
+.modifier-section input[type="tel"]:focus,
+.modifier-section select:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+.modifier-section input[type="file"] {
+    background: #f1f1f1;
+    border: none;
+    padding: 6px 0;
+}
+
+.modifier-section .modifier-button {
+    background-color: #28a745;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 0;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+.modifier-section .modifier-button:hover {
+    background-color: #218838;
+}
+
+.modifier-section p {
+    margin: 0 0 4px 0;
+    font-size: 0.95em;
+    color: #888;
+}
+
 .examples-home-page {
     display: flex;
     flex-direction: column;
@@ -677,4 +752,213 @@ img {
     margin: 0 auto;
     display: block;
   width: 10%;
+}
+
+.modifier-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 32px 24px;
+    max-width: 400px;
+    margin: 32px auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.modifier-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.modifier-section label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.modifier-section input[type="text"],
+.modifier-section input[type="tel"],
+.modifier-section input[type="file"],
+.modifier-section select {
+    padding: 8px 10px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font-size: 1rem;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.modifier-section input[type="text"]:focus,
+.modifier-section input[type="tel"]:focus,
+.modifier-section select:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+.modifier-section input[type="file"] {
+    background: #f1f1f1;
+    border: none;
+    padding: 6px 0;
+}
+
+.modifier-section .modifier-button {
+    background-color: #28a745;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 0;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+.modifier-section .modifier-button:hover {
+    background-color: #218838;
+}
+
+.modifier-section p {
+    margin: 0 0 4px 0;
+    font-size: 0.95em;
+    color: #888;
+}
+
+.modifier-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 32px 24px;
+    max-width: 400px;
+    margin: 32px auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.modifier-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.modifier-section label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.modifier-section input[type="text"],
+.modifier-section input[type="tel"],
+.modifier-section input[type="file"],
+.modifier-section select {
+    padding: 8px 10px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font-size: 1rem;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.modifier-section input[type="text"]:focus,
+.modifier-section input[type="tel"]:focus,
+.modifier-section select:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+.modifier-section input[type="file"] {
+    background: #f1f1f1;
+    border: none;
+    padding: 6px 0;
+}
+
+.modifier-section .modifier-button {
+    background-color: #28a745;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 0;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+.modifier-section .modifier-button:hover {
+    background-color: #218838;
+}
+
+.modifier-section p {
+    margin: 0 0 4px 0;
+    font-size: 0.95em;
+    color: #888;
+}
+
+/* Responsive tablette */
+@media (max-width: 900px) {
+  .container {
+    width: 90%;
+    padding: 10px;
+  }
+  .modifier-section {
+    max-width: 95vw;
+    padding: 20px 10px;
+  }
+  .examples-home-page .header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+  .filters-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-left: 20px;
+  }
+}
+
+/* Responsive mobile */
+@media (max-width: 600px) {
+  .container {
+    width: 98%;
+    padding: 5px;
+    border-radius: 0;
+  }
+  .modifier-section {
+    max-width: 100vw;
+    padding: 10px 2vw;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .examples-home-page .header,
+  .examples-home-page .navigation-pill-list {
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    width: 100vw;
+  }
+  .examples-home-page .title,
+  .examples-home-page .title-wrapper,
+  .examples-home-page .text-wrapper {
+    font-size: 1.1em;
+    white-space: normal;
+  }
+  .examples-home-page .hero-actions {
+    padding: 20px 2vw;
+  }
+  .examples-home-page .card-grid,
+  .examples-home-page .card-grid-2 {
+    padding: 8px;
+    gap: 12px;
+  }
+  .profil-photo-header img {
+    width: 40px;
+    height: 40px;
+  }
+  .filters-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-left: 10px;
+  }
+  .input-container input[type="text"] {
+    width: 90vw;
+    margin-bottom: 8px;
+  }
 }
