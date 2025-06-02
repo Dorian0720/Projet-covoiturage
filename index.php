@@ -5,82 +5,8 @@ session_start(); // Démarrer la session
 $isLoggedIn = isset($_SESSION['email']); // Supposons que $_SESSION['user'] contient les infos du user
 ?>
 
-<!-- Modal HTML -->
-<div id="detailsModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <p id="modalContent"></p>
-    </div>
-</div>
 
-<script>
-function showDetails(trajet) {
-    // Remplacez les valeurs ci-dessous par celles récupérées de la base de données
-    const modalContent = `
-        <strong>Point de rendez-vous :</strong> ${lieux_depart}<br>
-        <strong>Temps de trajet :</strong> ${date_arriver} minutes<br>
-        <strong>Nombre de places disponibles :</strong> ${nb_place}<br>
-        <strong>Avis du Conducteur :</strong> ${commentaire}<br>
-        <strong>Modèle du Véhicule :</strong> ${modele}<br>
-        <strong>Couleur du Véhicule :</strong> ${couleur}<br>
-        <strong>Énergie utilisée :</strong> ${energie}<br>
-        <strong>Préférences du Conducteur :</strong> ${statut}
-        <button onclick="reserver()">Réserver</button>
-    `;
-    document.getElementById('modalContent').innerHTML = modalContent;
-    document.getElementById('detailsModal').style.display = 'block';
-}
 
-function closeModal() {
-    document.getElementById('detailsModal').style.display = 'none';
-}
-
-// Close the modal when clicking outside of it
-window.onclick = function(event) {
-    const modal = document.getElementById('detailsModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
-</script>
-
-<style>
-/* Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-</style>
 <?php
 
 if (isset($_GET['lieux_depart']) && isset($_GET['lieux_arriver'])) {
@@ -115,9 +41,9 @@ if (isset($_GET['lieux_depart']) && isset($_GET['lieux_arriver'])) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EcoRide</title>
-    <link rel="stylesheet" href="global.css" />
-    <link rel="stylesheet" href="stylecss.css" />
-    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/stylecss.css" />
+    <link rel="stylesheet" href="css/index.css" />
   </head>
   <body>
     <div class="examples-home-page">
@@ -150,12 +76,27 @@ if (isset($_GET['lieux_depart']) && isset($_GET['lieux_arriver'])) {
 <div class="input-container">
 <input type="text" id="lieux_depart" placeholder="Départ">
 <input type="text" id="lieux_arriver" placeholder="Destination">
+<input type="date" id="date_depart" placeholder="Date de départ">
+
+  <!-- Filtres -->
+<div class="filters-container">
+  <label>
+    <input type="checkbox" id="places_filter" /> Trajets avec places disponibles
+  </label>
+  <label>
+    <input type="checkbox" id="ecolo_filter" /> Véhicule écologique
+  </label>
+ <!-- Ajoute d'autres filtres selon tes besoins -->
+</div>
+
+
   <button class="rechercher" onclick="rechercher()">Rechercher</button>
 </div>
 <div class="result-container">
 <h2>Résultat:</h2>
 <div id="resultats"></div>
 </div>
+
 
       <img class="section" src="./image/view-3d-car-with-trees.jpg" />
       <div class="card-grid">
@@ -280,9 +221,20 @@ approche écologique</div>
       function rechercher() {
         let depart = document.getElementById("lieux_depart").value;
         let destination = document.getElementById("lieux_arriver").value;
+        let date = document.getElementById("date_depart").value;
         let resultDiv = document.getElementById("resultats");
 
-        if (depart && destination) {
+        // Récupère l'état des filtres
+    let places = document.getElementById("places_filter").checked ? 1 : 0;
+    let ecolo = document.getElementById("ecolo_filter").checked ? 1 : 0;
+
+        if (depart && destination && date) {
+          let params = "lieux_depart=" + encodeURIComponent(depart) +
+                       "&lieux_arriver=" + encodeURIComponent(destination) +
+                       "&date_depart=" + encodeURIComponent(date) +
+                       "&nb_place=" + places +
+                       "&ecolo=" + ecolo;
+          // Envoie une requête AJAX pour récupérer les résultats
             let xhr = new XMLHttpRequest();
             xhr.open("GET", "search.php?lieux_depart=" + encodeURIComponent(depart) + "&lieux_arriver=" + encodeURIComponent(destination), true);
             xhr.onload = function () {
@@ -326,6 +278,23 @@ approche écologique</div>
     flex: 1 1 200px;
     max-width: 300px;
 }
+/*filters */
+.filters-container {
+    display: flex-block;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+.filters-container label {
+    font-size: 1em;
+    flex: auto;
+    max-width: 200px;
+    cursor: pointer;
+}
+/*fin filters */
 
 .result-container {
     padding: 10px;
@@ -400,4 +369,6 @@ approche écologique</div>
         align-items: center;
     }
 }
+
+
 </style>

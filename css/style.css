@@ -41,3 +41,32 @@ form input[type='submit'] {
     color: #fff;
     margin-top: 10px;
 }
+
+/* Responsive tablette */
+@media (max-width: 900px) {
+  section {
+    width: 90vw;
+    padding: 10px 2vw;
+  }
+}
+
+/* Responsive mobile */
+@media (max-width: 600px) {
+  body {
+    padding: 10px 0;
+    height: auto;
+  }
+  section {
+    width: 98vw;
+    min-width: unset;
+    padding: 10px 2vw;
+    border-radius: 0;
+  }
+  form input {
+    font-size: 1em;
+    padding: 10px 5px;
+  }
+  section h1 {
+    font-size: 1.2em;
+  }
+}
