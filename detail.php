@@ -135,8 +135,10 @@ $isLoggedIn = isset($_SESSION['email']); // Supposons que $_SESSION['email'] con
     <a href="index.php" class="back-btn">Retour</a>
     <?php if ($isLoggedIn): ?>
         <form method="post" style="display: inline;">
-            <button type="submit" name="participer" class="back-btn">Participer</button>
+         <button type="submit" name="participer" class="back-btn" onclick="return confirm('Êtes-vous sûr de vouloir participer à ce trajet ?');">Participer</button>
+            <input type="hidden" name="covoiturage_id" value="<?php echo $covoiturage_id; ?>">
         </form>
+        
        <?php else: ?>
     <p style="color: red; margin-top: 20px;">Connectez-vous pour participer à ce trajet.</p>
 <?php endif; ?>
@@ -153,14 +155,48 @@ $isLoggedIn = isset($_SESSION['email']); // Supposons que $_SESSION['email'] con
                // Ajoute le covoiturage à la liste des participations dans la session
 if (!isset($_SESSION['participations'])) {
     $_SESSION['participations'] = [];
+}}
+if (in_array($covoiturage_id, $_SESSION['participations'])) {
+    echo "<p style='color: orange;'>Vous avez déjà réservé ce trajet.</p>";
+} else {
+    // Ajouter le covoiturage à la liste des participations dans la session
+    $_SESSION['participations'][] = $covoiturage_id;
 }
-$_SESSION['participations'][] = $covoiturage_id;
-                echo "<p style='color: green;'>Participation confirmée, rendez-vous dans la section compte !</p>";
+    // Récupérer les crédits depuis le cookie
+$credits = isset($_COOKIE['credits']) ? (int)$_COOKIE['credits'] : 20; // Valeur par défaut si le cookie n'existe pas
+$prix = (int)$row['prix_personne']; // prix du trajet
+
+if ($credits >= $prix) {
+    $credits -= $prix;
+    setcookie('credits', $credits, time() + 3600*24*365, "/");
+    // ...valider la participation...
+    echo "<p style='color: green;'>Participation confirmée, il vous reste $credits crédits.</p>";
+} else {
+    echo "<p style='color: red;'>Crédits insuffisants pour participer à ce trajet.</p>";
+}
+
+                // Enregistrer l'historique des participations dans un cookie   
+
+// Récupérer l'historique depuis le cookie (ou tableau vide)
+$historique = [];
+if (isset($_COOKIE['participations'])) {
+    $historique = json_decode($_COOKIE['participations'], true);
+    if (!is_array($historique)) $historique = [];
+}
+
+// Ajouter la nouvelle participation si elle n'existe pas déjà
+if (!in_array($covoiturage_id, $historique)) {
+    $historique[] = $covoiturage_id;
+    setcookie('participations', json_encode($historique), time() + 3600*24*365, "/");
+}
+
+                // Rediriger vers la page de compte ou afficher un message de succès
+                // header("Location: compte.php");
+                // exit();
             }
         } else {
-            echo "<p style='color: red;'>Vous devez être connecté pour participer.</p>";
+            echo "<p style='color: red;'>Veuillez vous connecter pour participer à ce trajet.</p>";
         }
-    }
     ?>
 </div>
 </body>

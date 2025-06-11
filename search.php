@@ -34,6 +34,9 @@ if (!empty($date_depart)) {
     $sql .= " AND date_depart >= ?";
     $params[] = $date_depart;
     $types .= "s";
+    $sql .= " ORDER BY ABS(DATEDIFF(date_depart, ?)) ASC";
+    $params[] = $date_depart;
+    $types .= "s";
 }
 
 if ($places) {

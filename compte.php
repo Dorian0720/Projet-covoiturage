@@ -1,9 +1,16 @@
 <?php
 session_start();
+// Vérifier si l'utilisateur est connecté
 $isLoggedIn = isset($_SESSION['email']);
 if (!isset($_SESSION['email'])) {
     header("Location: index.php");
     exit();
+}
+if (!isset($_COOKIE['credits'])) {
+    setcookie('credits', 20, time() + (86400 * 30), "/"); // 30 jours
+    $credits = 20; // Valeur par défaut
+} else {
+    $credits = (int)$_COOKIE['credits'];
 }
 
 $email = $_SESSION['email'];
@@ -141,7 +148,7 @@ $stmt->bind_param("sssssis", $nouveau_nom, $nouveau_prenom, $nouveau_telephone, 
     $stmt->close();
 }
 
-$conn->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -176,14 +183,17 @@ $conn->close();
     </div>
     </div>
 </header>
-    <div class="container">
+<div class="container">
+    <div class="container-gauche">
         <h1>Bienvenue sur ton compte</h1>
         <p><strong>Email :</strong> <?= htmlspecialchars($email) ?></p>
         <p><strong>Nom :</strong> <?= htmlspecialchars($nom) ?></p>
         <p><strong>Prénom :</strong> <?= htmlspecialchars($prenom) ?></p>
+        <p><strong>Crédits :</strong> <span class="credits"><?= htmlspecialchars($credits) ?></span></p>
         <p><strong>Numéro :</strong> <?= htmlspecialchars($telephone) ?></p>
         <p><strong>Rôle :</strong> <?= htmlspecialchars($role_id) ?></p>
         <!-- <p><strong>Crédits disponibles :</strong> <span class="credits"><?= htmlspecialchars($credits) ?> crédits</span></p> -->
+         
 
         <?php if ($photo_profil): ?>
     <div class="profil-photo-header">
@@ -280,5 +290,55 @@ window.onload = toggleConducteurForm;
     background: #fff;
 }
 </style>
+
+<div class="container-droite">
+    <?php
+    // Récupérer l'historique des participations
+    $historique = [];
+if (isset($_COOKIE['participations'])) {
+    $historique = json_decode($_COOKIE['participations'], true);
+    if (!is_array($historique)) $historique = [];
+}
+    if (count($historique) > 0):
+        foreach ($historique as $id):
+            // Ici, tu peux faire une requête pour afficher les infos du covoiturage
+            $stmt = $conn->prepare("
+           SELECT c.lieux_depart, c.lieux_arriver, c.date_depart, u.nom AS conducteur_nom
+    FROM covoiturage c
+    JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
+    WHERE c.covoiturage_id = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($row = $result->fetch_assoc()): ?>
+                <h2>Historique des participations:</h2>
+                <br>
+                <ul>
+                    <li>
+                        <strong>Départ :</strong> <?= htmlspecialchars($row['lieux_depart']) ?>,
+                        <strong>Destination :</strong> <?= htmlspecialchars($row['lieux_arriver']) ?>,
+                        <strong>Date :</strong> <?= htmlspecialchars($row['date_depart']) ?>,
+                        <strong>Conducteur :</strong> <?= htmlspecialchars($row['conducteur_nom']) ?>
+                    </li>
+                </ul>
+            <?php 
+                
+                endif;
+            $stmt->close();
+        endforeach;
+        echo "</ul>";
+    else: 
+        echo "<p>Aucune participation enregistrée.</p>";
+    endif;
+    ?>
+
+</div>
+</div>
+<style>.container-flex {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}</style>
+
 </body>
 </html>
