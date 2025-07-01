@@ -26,11 +26,17 @@ $ecolo = isset($_GET['ecolo']) && $_GET['ecolo'] == 1;
 // filtre date
 $date_depart = $_GET['date_depart'] ?? '';
 // Construis dynamiquement la requête SQL selon les filtres cochés
-$sql = "SELECT * FROM covoiturage WHERE lieux_depart = ? AND lieux_arriver = ?";
-$params = [$depart, $destination];
-$types = "ss";
+  $sql = "SELECT covoiturage.*, utilisateur.nom AS conducteur_nom
+        FROM covoiturage
+        JOIN utilisateur ON covoiturage.utilisateur_id = utilisateur.utilisateur_id
+         WHERE lieux_depart = ? AND lieux_arriver = ? AND nb_place > 0"
+        . " AND date_depart >= CURDATE() ORDER BY date_depart ASC";
+    $params = [$depart, $destination];
+    $types = "ss";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param($types, ...$params);
 
-if (!empty($date_depart)) {
+    if (!empty($date_depart)) {
     $sql .= " AND date_depart >= ?";
     $params[] = $date_depart;
     $types .= "s";
@@ -46,14 +52,6 @@ if ($places) {
 if ($ecolo) {
     $sql .= " AND vehicule_ecolo = 1";
 }
-
-    $sql = "SELECT covoiturage.*, utilisateur.nom AS conducteur_nom
-        FROM covoiturage
-        JOIN utilisateur ON covoiturage.covoiturage_id = utilisateur.utilisateur_id
-         WHERE lieux_depart = ? AND lieux_arriver = ? AND nb_place > 0"
-        . " AND date_depart >= CURDATE() ORDER BY date_depart ASC";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $depart, $destination);
     
     $stmt->execute();
     $result = $stmt->get_result();

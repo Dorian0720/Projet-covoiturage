@@ -194,9 +194,7 @@ if (!in_array($covoiturage_id, $historique)) {
                 // header("Location: compte.php");
                 // exit();
             }
-        } else {
-            echo "<p style='color: red;'>Veuillez vous connecter pour participer à ce trajet.</p>";
-        }
+        } 
     ?>
 </div>
 </body>

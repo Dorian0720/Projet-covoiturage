@@ -97,7 +97,6 @@ if (isset($_GET['lieux_depart']) && isset($_GET['lieux_arriver'])) {
 <div id="resultats"></div>
 </div>
 
-
       <img class="section" src="./image/view-3d-car-with-trees.jpg" />
       <div class="card-grid">
         <div class="text-content-heading">
@@ -184,23 +183,13 @@ approche écologique</div>
             <div class="div-wrapper"><div class="text-strong">Use cases</div></div>
           </div>
           <div class="text-link-list-item"><div class="list-item">UI design</div></div>
-          <div class="text-link-list-item"><div class="list-item">UX design</div></div>
-          <div class="text-link-list-item"><div class="list-item">Wireframing</div></div>
-          <div class="text-link-list-item"><div class="list-item">Diagramming</div></div>
-          <div class="text-link-list-item"><div class="list-item">Brainstorming</div></div>
-          <div class="text-link-list-item"><div class="list-item">Online whiteboard</div></div>
-          <div class="text-link-list-item"><div class="list-item">Team collaboration</div></div>
+          
         </div>
         <div class="text-link-list">
           <div class="text-strong-wrapper">
             <div class="div-wrapper"><div class="text-strong">Explore</div></div>
           </div>
           <div class="text-link-list-item"><div class="list-item">Design</div></div>
-          <div class="text-link-list-item"><div class="list-item">Prototyping</div></div>
-          <div class="text-link-list-item"><div class="list-item">Development features</div></div>
-          <div class="text-link-list-item"><div class="list-item">Design systems</div></div>
-          <div class="text-link-list-item"><div class="list-item">Collaboration features</div></div>
-          <div class="text-link-list-item"><div class="list-item">Design process</div></div>
           <div class="text-link-list-item"><div class="list-item">FigJam</div></div>
         </div>
         <div class="text-link-list">
@@ -208,12 +197,7 @@ approche écologique</div>
             <div class="div-wrapper"><div class="text-strong">Resources</div></div>
           </div>
           <div class="text-link-list-item"><div class="list-item">Blog</div></div>
-          <div class="text-link-list-item"><div class="list-item">Best practices</div></div>
-          <div class="text-link-list-item"><div class="list-item">figma</div></div>
-          <div class="text-link-list-item"><div class="list-item">Color wheel</div></div>
-          <div class="text-link-list-item"><div class="list-item">Support</div></div>
-          <div class="text-link-list-item"><div class="list-item">Developers</div></div>
-          <div class="text-link-list-item"><div class="list-item">Resource library</div></div>
+          
         </div>
       </footer>
     </div>
