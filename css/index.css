@@ -951,10 +951,13 @@ img {
     width: 40px;
     height: 40px;
   }
+<<<<<<< HEAD
   .profil-photo-header {
     width: 40px;
     height: 40px;
   }
+=======
+>>>>>>> 407be434b0a66949fa9a9f579f465172092b7647
   .filters-container {
     flex-direction: column;
     align-items: flex-start;
@@ -965,6 +968,7 @@ img {
     width: 90vw;
     margin-bottom: 8px;
   }
+<<<<<<< HEAD
 }
 
 .nouveauVehicule label,
@@ -972,4 +976,6 @@ img {
     display: inline-block;
     margin-right: 10px;
     vertical-align: middle;
+=======
+>>>>>>> 407be434b0a66949fa9a9f579f465172092b7647
 }
