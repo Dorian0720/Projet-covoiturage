@@ -138,10 +138,6 @@ $isLoggedIn = isset($_SESSION['email']); // Supposons que $_SESSION['email'] con
          <button type="submit" name="participer" class="back-btn" onclick="return confirm('Êtes-vous sûr de vouloir participer à ce trajet ?');">Participer</button>
             <input type="hidden" name="covoiturage_id" value="<?php echo $covoiturage_id; ?>">
         </form>
-<<<<<<< HEAD
-        
-=======
->>>>>>> 407be434b0a66949fa9a9f579f465172092b7647
        <?php else: ?>
     <p style="color: red; margin-top: 20px;">Connectez-vous pour participer à ce trajet.</p>
 <?php endif; ?>
@@ -158,8 +154,8 @@ $isLoggedIn = isset($_SESSION['email']); // Supposons que $_SESSION['email'] con
                // Ajoute le covoiturage à la liste des participations dans la session
 if (!isset($_SESSION['participations'])) {
     $_SESSION['participations'] = [];
-<<<<<<< HEAD
 }}
+
 if (in_array($covoiturage_id, $_SESSION['participations'])) {
     echo "<p style='color: orange;'>Vous avez déjà réservé ce trajet.</p>";
 } else {
@@ -174,7 +170,7 @@ if ($credits >= $prix) {
     $credits -= $prix;
     setcookie('credits', $credits, time() + 3600*24*365, "/");
     // ...valider la participation...
-    echo "<p style='color: green;'>Participation confirmée, il vous reste $credits crédits.</p>";
+    echo "<p style='color: green;'>Participation confirmée, il vous reste $credits crédits. Rendez-vous dans la section compte !</p>";
 } else {
     echo "<p style='color: red;'>Crédits insuffisants pour participer à ce trajet.</p>";
 }
@@ -199,16 +195,8 @@ if (!in_array($covoiturage_id, $historique)) {
                 // exit();
             }
         } 
-=======
-}
-$_SESSION['participations'][] = $covoiturage_id;
-                echo "<p style='color: green;'>Participation confirmée, rendez-vous dans la section compte !</p>";
-            }
-        } else {
-            echo "<p style='color: red;'>Vous devez être connecté pour participer.</p>";
-        }
-    }
->>>>>>> 407be434b0a66949fa9a9f579f465172092b7647
+
+
     ?>
 </div>
 </body>
