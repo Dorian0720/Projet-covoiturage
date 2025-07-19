@@ -1,19 +1,34 @@
+.section-gauche {
+    display: flex;
+    flex-direction: column;
+    min-width: 320px;
+    padding: 20px;
+    background-color: #1dc47cff;
+    border-radius: 10px;
+    margin-left: 2px;}
 
-.container {
-  width: 40%;
-  margin: 50px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);}
+.section-covoiturage {
+  height: 30px;
+  justify-items: 20Px;
+  width: 200px;
+    display: flex;
+    flex-direction: column;
+    min-width: 320px;
+    padding: 10px;
+    background-color: #1dc47cff;
+    border-radius: 10px;
+    margin-left: 2px;}
 
  .modifier-section {
-    background: #f8f9fa;
+   display: block;
+   background: #f8f9fa;
     border-radius: 10px;
-    padding: 32px 24px;
+    padding: 3px 24px;
     max-width: 400px;
     margin: 32px auto;
     box-shadow: 0 2px 12px rgba(0,0,0,0.07);}
+    
+    
     
 .modifier-section form {
     display: flex;
@@ -104,11 +119,14 @@
   }
   
   .examples-home-page .block {
+    margin-left: 100px;
     display: inline-flex;
     align-items: center;
-    gap: 24px;
+    gap: 245px;
     position: relative;
     flex: 0 0 auto;
+    justify-content: normal;
+    
   }
   
   .examples-home-page .figma {
@@ -890,92 +908,3 @@ img {
     color: #888;
 }
 
-/* Responsive tablette */
-@media (max-width: 900px) {
-  .container {
-    width: 90%;
-    padding: 10px;
-  }
-  .modifier-section {
-    max-width: 95vw;
-    padding: 20px 10px;
-  }
-  .examples-home-page .header {
-    flex-direction: column;
-    gap: 12px;
-    padding: 16px;
-  }
-  .filters-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding-left: 20px;
-  }
-}
-
-/* Responsive mobile */
-@media (max-width: 600px) {
-  .container {
-    width: 98%;
-    padding: 5px;
-    border-radius: 0;
-  }
-  .modifier-section {
-    max-width: 100vw;
-    padding: 10px 2vw;
-    border-radius: 0;
-    box-shadow: none;
-  }
-  .examples-home-page .header,
-  .examples-home-page .navigation-pill-list {
-    flex-direction: column;
-    gap: 8px;
-    padding: 8px;
-    width: 100vw;
-  }
-  .examples-home-page .title,
-  .examples-home-page .title-wrapper,
-  .examples-home-page .text-wrapper {
-    font-size: 1.1em;
-    white-space: normal;
-  }
-  .examples-home-page .hero-actions {
-    padding: 20px 2vw;
-  }
-  .examples-home-page .card-grid,
-  .examples-home-page .card-grid-2 {
-    padding: 8px;
-    gap: 12px;
-  }
-  .profil-photo-header img {
-    width: 40px;
-    height: 40px;
-  }
-<<<<<<< HEAD
-  .profil-photo-header {
-    width: 40px;
-    height: 40px;
-  }
-=======
->>>>>>> 407be434b0a66949fa9a9f579f465172092b7647
-  .filters-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding-left: 10px;
-  }
-  .input-container input[type="text"] {
-    width: 90vw;
-    margin-bottom: 8px;
-  }
-<<<<<<< HEAD
-}
-
-.nouveauVehicule label,
-.nouveauVehicule input {
-    display: inline-block;
-    margin-right: 10px;
-    vertical-align: middle;
-=======
->>>>>>> 407be434b0a66949fa9a9f579f465172092b7647
-}

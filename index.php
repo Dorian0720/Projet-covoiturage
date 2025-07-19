@@ -51,8 +51,8 @@ if (isset($_GET['lieux_depart']) && isset($_GET['lieux_arriver'])) {
         <div class="navigation-pill-list">
         <nav>
           <div class="navigation-pill"><div class="title"> <a href="index.php">Retour vers la page d’accueil</a></div></div>
-          <div class="title-wrapper"><div class="text-wrapper"><a href="#">Accès aux covoiturages</a></div></div>
-          <div class="title-wrapper"><div class="text-wrapper"><a href="index.html">Contact</a></div></div>
+          <div class="title-wrapper"><div class="text-wrapper"><a href="#recherche">Accès aux covoiturages</a></div></div>
+          <div class="title-wrapper"><div class="text-wrapper"><a href="#contact">Contact</a></div></div>
           <div class="title-wrapper">
     <div class="text-wrapper">
         <?php if ($isLoggedIn): ?>
@@ -73,7 +73,8 @@ if (isset($_GET['lieux_depart']) && isset($_GET['lieux_arriver'])) {
           <p class="subtitle">Le covoiturage le plus rentable</p>
         </div>
          <h2>Recherche un trajet:</h2>
-<div class="input-container">
+<div class="input-container" id ="recherche">
+  <!-- Champs de recherche -->
 <input type="text" id="lieux_depart" placeholder="Départ">
 <input type="text" id="lieux_arriver" placeholder="Destination">
 <input type="date" id="date_depart" placeholder="Date de départ">
@@ -186,7 +187,7 @@ approche écologique</div>
           
         </div>
         <div class="text-link-list">
-          <div class="text-strong-wrapper">
+          <div class="text-strong-wrapper" id="contact">
             <div class="div-wrapper"><div class="text-strong">Explore</div></div>
           </div>
           <div class="text-link-list-item"><div class="list-item">Design</div></div>
@@ -238,13 +239,6 @@ approche écologique</div>
 </html>
 
 <style>
-  /* Rendre le modal responsive */
-.modal-content {
-    width: 90%;
-    max-width: 600px;
-    margin: 10% auto;
-    box-sizing: border-box;
-}
 
 /* Input + bouton de recherche */
 .input-container {

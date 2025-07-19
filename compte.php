@@ -23,7 +23,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
-
+$id_utilisateur = $_SESSION['email']; // ou autre méthode sécurisée
 $nom = $user['nom'];
 $prenom = $user['prenom'];
 $email = $user['email'];
@@ -179,6 +179,15 @@ if (isset($_COOKIE['participations'])) {
     $historique = json_decode($_COOKIE['participations'], true);
     if (!is_array($historique)) $historique = [];
 }
+
+$stmt = $conn->prepare("
+    SELECT lieux_depart, lieux_arriver, date_depart, nb_place
+    FROM covoiturage
+    WHERE utilisateur_id = ?
+");
+$stmt->bind_param("i", $id_utilisateur);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -190,7 +199,7 @@ if (isset($_COOKIE['participations'])) {
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <div class="examples-home-page">
+    <div class="examples-home-page" style="background-color: #9e9797ff; ">
         <header class="header">
             <div class="navigation-pill-list">
                 <nav class="navigation">
@@ -210,97 +219,152 @@ if (isset($_COOKIE['participations'])) {
                 </nav>
             </div>
         </header>
-        <div class="container" >
-            <h1>Bienvenue sur ton compte</h1>
-            <p><strong>Email :</strong> <?= htmlspecialchars($email) ?></p>
-            <p><strong>Nom :</strong> <?= htmlspecialchars($nom) ?></p>
-            <p><strong>Prénom :</strong> <?= htmlspecialchars($prenom) ?></p>
-            <p><strong>Numéro :</strong> <?= htmlspecialchars($telephone) ?></p>
-            <p><strong>Rôle :</strong>
-                <?php
-                if ($role_id == 1) echo "Conducteur";
-                elseif ($role_id == 2) echo "Passager";
-                elseif ($role_id == 3) echo "Les deux";
-                else echo htmlspecialchars($role_id);
-                ?>
-            </p>
-            <!-- <p><strong>Crédits disponibles :</strong> <span class="credits"><?= htmlspecialchars($credits) ?> crédits</span></p> -->
-
-            <?php if ($photo_profil): ?>
-            <div class="profil-photo-header">
-                <img src="<?= htmlspecialchars($photo_profil) ?>" alt="Photo de profil" />
-            </div>
-            <?php endif; ?>
-
-            <form action="logout.php" method="post">
-                <button type="submit" class="button-logout">Se déconnecter</button>
-            </form>
-
-            <div class="modifier-section">
-                <h2>Modifier mes informations</h2><br>
-                <form method="post" enctype="multipart/form-data">
-                    <label for="nom">Nom :</label>
-                    <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($nom) ?>" required>
-                    <label for="prenom">Prénom :</label>
-                    <input type="text" id="prenom" name="prenom" value="<?= htmlspecialchars($prenom) ?>" required>
-                    <label for="telephone">Numéro de téléphone :</label>
-                    <input type="tel" id="telephone" name="telephone" value="<?= htmlspecialchars($telephone) ?>" required>
-                    <label for="adresse">Adresse :</label>
-                    <input type="text" id="adresse" name="adresse" value="<?= htmlspecialchars($user['adresse'] ?? '') ?>">
-                    <label for="role_id">Rôle :</label>
-                    <select id="role_id" name="role_id">
-                        <option value="1" <?= $role_id == 1 ? 'selected' : '' ?>>Conducteur</option>
-                        <option value="2" <?= $role_id == 2 ? 'selected' : '' ?>>Passager</option>
-                        <option value="3" <?= $role_id == 3 ? 'selected' : '' ?>>Les deux</option>
-                    </select>
-                    <label for="photo_profil">Photo de profil :</label>
-                    <input type="file" id="photo_profil" name="photo_profil" accept="image/jpeg, image/png">
-                    <p style="font-size: 12px; color: #888;">(Taille maximale : 2 Mo)</p>
-                    <p style="font-size: 12px; color: #888;">(Formats acceptés : JPG, PNG)</p>
-                    <button type="submit" name="modifier_infos" class="modifier-button">Enregistrer</button>
-                </form>
-            </div>
+        
+        <div class="block">
+            <!-- Colonne de gauche : infos et modification -->
             
-            <?php if ($role_id == 1 || $role_id == 3): ?>
-            <div class="modifier-section">
-                <h2>Proposer un nouveau voyage</h2>
-                <form method="post" id="formTrajet">
-                    <label for="lieux_depart">Adresse de départ :</label>
-                    <input type="text" id="lieux_depart" name="lieux_depart" required>
-                    <label for="lieux_arriver">Adresse d’arrivée :</label>
-                    <input type="text" id="lieux_arriver" name="lieux_arriver" required>
-                    <label for="vehicule">Véhicule :</label>
-                    <select id="vehicule" name="vehicule" required>
-                        <option value="">-- Choisir un véhicule --</option>
-                        <?php foreach ($vehicules as $v): ?>
-                            <option value="<?= $v['voiture_id'] ?>">
-                                <?= htmlspecialchars($v['modele']) ?> (<?= htmlspecialchars($v['immatriculation']) ?>)
-                            </option>
-                        <?php endforeach; ?>
-                        <option value="nouveau">Ajouter un nouveau véhicule</option>
-                    </select>
-                    <div id="nouveauVehicule" style="display:none; margin-top:10px;">
-                        <label for="nouveau_modele">Modèle :</label>
-                        <input type="text" id="nouveau_modele" name="nouveau_modele">
-                        <label for="nouvelle_immatriculation">Immatriculation :</label>
-                        <input type="text" id="nouvelle_immatriculation" name="nouvelle_immatriculation">
-                        <label for="nouvelle_energie">Énergie :</label>
-                        <input type="text" id="nouvelle_energie" name="nouvelle_energie">
-                        <label for="nouvelle_couleur">Couleur :</label>
-                        <input type="text" id="nouvelle_couleur" name="nouvelle_couleur">
-                        <label for="nouvelle_date_immat">Date d'immatriculation :</label>
-                        <input type="date" id="nouvelle_date_immat" name="nouvelle_date_immat">
-                    </div>
-                    <label for="prix_personne">Prix par personne (crédits) :</label>
-                    <input type="number" id="prix_personne" name="prix_personne" min="3" required>
-                    <small>2 crédits seront prélevés par la plateforme sur chaque réservation.</small><br><br>
-                    <label for="date_depart">Date de départ :</label>
-                    <input type="date" id="date_depart" name="date_depart" required>
-                    <label for="nb_place">Nombre de places :</label>
-                    <input type="number" id="nb_place" name="nb_place" min="1" required>
-                    <button type="submit" name="proposer_trajet" class="modifier-button">Publier le trajet</button>
+                
+                <div class="modifier-section">
+                    <h1>Bienvenue sur ton compte</h1>
+                <p><strong>Email :</strong> <?= htmlspecialchars($email) ?></p>
+                <p><strong>Nom :</strong> <?= htmlspecialchars($nom) ?></p>
+                <p><strong>Prénom :</strong> <?= htmlspecialchars($prenom) ?></p>
+                <p><strong>Numéro :</strong> <?= htmlspecialchars($telephone) ?></p>
+                <p><strong>Crédits :</strong> <?= $credits ?> crédits</p>
+                <p><strong>Rôle :</strong>
+                
+                    <?php
+                    if ($role_id == 1) echo "Conducteur";
+                    elseif ($role_id == 2) echo "Passager";
+                    elseif ($role_id == 3) echo "Les deux";
+                    else echo htmlspecialchars($role_id);
+                    ?>
+                </p>
+                <?php if ($photo_profil): ?>
+                <div class="profil-photo-header">
+                    <img src="<?= htmlspecialchars($photo_profil) ?>" alt="Photo de profil" />
+                </div>
+                <?php endif; ?>
+
+                <form action="logout.php" method="post">
+                    <button type="submit" class="button-logout">Se déconnecter</button>
                 </form>
-            </div>
+
+                    <h2>Modifier mes informations</h2><br>
+                    <form method="post" enctype="multipart/form-data">
+                        <label for="nom">Nom :</label>
+                        <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($nom) ?>" required>
+                        <label for="prenom">Prénom :</label>
+                        <input type="text" id="prenom" name="prenom" value="<?= htmlspecialchars($prenom) ?>" required>
+                        <label for="telephone">Numéro de téléphone :</label>
+                        <input type="tel" id="telephone" name="telephone" value="<?= htmlspecialchars($telephone) ?>" required>
+                        <label for="adresse">Adresse :</label>
+                        <input type="text" id="adresse" name="adresse" value="<?= htmlspecialchars($user['adresse'] ?? '') ?>">
+                        <label for="role_id">Rôle :</label>
+                        <select id="role_id" name="role_id">
+                            <option value="1" <?= $role_id == 1 ? 'selected' : '' ?>>Conducteur</option>
+                            <option value="2" <?= $role_id == 2 ? 'selected' : '' ?>>Passager</option>
+                            <option value="3" <?= $role_id == 3 ? 'selected' : '' ?>>Les deux</option>
+                        </select>
+                        <label for="photo_profil">Photo de profil :</label>
+                        <input type="file" id="photo_profil" name="photo_profil" accept="image/jpeg, image/png">
+                        <p style="font-size: 12px; color: #888;">(Taille maximale : 2 Mo)</p>
+                        <p style="font-size: 12px; color: #888;">(Formats acceptés : JPG, PNG)</p>
+                        <button type="submit" name="modifier_infos" class="modifier-button">Enregistrer</button>
+                    </form>
+                </div>
+            
+            <!-- Colonne de droite : proposer voyage + historique -->
+            
+                <?php if ($role_id == 1 || $role_id == 3): ?>
+                <div class="modifier-section">
+                    
+                    <h2>Proposer un nouveau voyage</h2>
+                    <form method="post" id="formTrajet">
+                        <label for="lieux_depart">Adresse de départ :</label>
+                        <input type="text" id="lieux_depart" name="lieux_depart" required>
+                        <label for="lieux_arriver">Adresse d’arrivée :</label>
+                        <input type="text" id="lieux_arriver" name="lieux_arriver" required>
+                        <label for="vehicule">Véhicule :</label>
+                        <select id="vehicule" name="vehicule" required>
+                            <option value="">-- Choisir un véhicule --</option>
+                            <?php foreach ($vehicules as $v): ?>
+                                <option value="<?= $v['voiture_id'] ?>">
+                                    <?= htmlspecialchars($v['modele']) ?> (<?= htmlspecialchars($v['immatriculation']) ?>)
+                                </option>
+                            <?php endforeach; ?>
+                            <option value="nouveau">Ajouter un nouveau véhicule</option>
+                        </select>
+                        <div id="nouveauVehicule" style="display:none; margin-top:10px;">
+                            <label for="nouveau_modele">Modèle :</label>
+                            <input type="text" id="nouveau_modele" name="nouveau_modele">
+                            <label for="nouvelle_immatriculation">Immatriculation :</label>
+                            <input type="text" id="nouvelle_immatriculation" name="nouvelle_immatriculation">
+                            <label for="nouvelle_energie">Énergie :</label>
+                            <input type="text" id="nouvelle_energie" name="nouvelle_energie">
+                            <label for="nouvelle_couleur">Couleur :</label>
+                            <input type="text" id="nouvelle_couleur" name="nouvelle_couleur">
+                            <label for="nouvelle_date_immat">Date d'immatriculation :</label>
+                            <input type="date" id="nouvelle_date_immat" name="nouvelle_date_immat">
+                        </div>
+                        <label for="prix_personne">Prix par personne (crédits) :</label>
+                        <input type="number" id="prix_personne" name="prix_personne" min="2" required>
+                        <small>2 crédits seront prélevés par la plateforme sur chaque réservation.</small><br><br>
+                        <label for="date_depart">Date de départ :</label>
+                        <input type="date" id="date_depart" name="date_depart" required>
+                        <label for="nb_place">Nombre de places :</label>
+                        <input type="number" id="nb_place" name="nb_place" min="1" required>
+                        <button type="submit" name="proposer_trajet" class="modifier-button">Publier le trajet</button>
+                        </form>
+                        
+                        <li>
+                            
+                            <?php if ($result->num_rows > 0): ?>
+                                <ul>
+                            <?php while ($row = $result->fetch_assoc()): ?>
+                                </ul>
+                                <li>
+                                    Départ : <?= htmlspecialchars($row['lieux_depart']) ?> |
+                                    Arrivée : <?= htmlspecialchars($row['lieux_arriver']) ?> |
+                                    Date de départ : <?= htmlspecialchars($row['date_depart']) ?> |
+                                    Nombre de places : <?= htmlspecialchars($row['nb_place']) ?>
+                                </li>
+                            <?php endwhile; ?>
+                            </ul>
+                            <?php else: ?>
+                                <p>Aucun trajet prévu.</p>
+                            <?php endif; ?>
+                                   <button class="del-btn" onclick="if(confirm('Supprimer ce trajet ?')) { document.cookie = 'participations=' + JSON.stringify(<?= json_encode(array_diff($historique, [$id])) ?>) + '; path=/; max-age=31536000'; location.reload(); }">Supprimer</button>
+                                    <button class="del-btn" onclick="if(confirm('Demarrer le trajet ?')) { document.cookie = 'participations=' + JSON.stringify(<?= json_encode(array_diff($historique, [$id])) ?>) + '; path=/; max-age=31536000'; location.reload(); }">Annuler</button>
+                                </li>
+                                 <?php endif; ?>
+                                
+                            
+                          
+                          
+                            
+                           
+                                   
+                </div>
+                <script>
+                // Affichage dynamique du formulaire nouveau véhicule
+                function toggleNouveauVehicule() {
+                    var select = document.getElementById('vehicule');
+                    var div = document.getElementById('nouveauVehicule');
+                    div.style.display = (select.value === 'nouveau') ? 'block' : 'none';
+                }
+                document.getElementById('vehicule').addEventListener('change', toggleNouveauVehicule);
+                window.onload = function() {
+                    if(document.getElementById('vehicule').value === 'nouveau') {
+                        document.getElementById('nouveauVehicule').style.display = 'block';
+                    }
+                };
+                </script>
+                
+
+
+            
+       
             <script>
             // Affichage dynamique du formulaire nouveau véhicule
             function toggleNouveauVehicule() {
@@ -316,7 +380,8 @@ if (isset($_COOKIE['participations'])) {
                 }
             };
             </script>
-            <?php endif; ?>
+         </div>
+            
 
             <!-- Historique des participations en fin de page -->
             <div class="modifier-section">
@@ -335,8 +400,19 @@ if (isset($_COOKIE['participations'])) {
                             Départ : <?= htmlspecialchars($row['lieux_depart']) ?> |
                             Arrivée : <?= htmlspecialchars($row['lieux_arriver']) ?> |
                             Date : <?= htmlspecialchars($row['date_depart']) ?>
+                            <button class="del-btn" onclick="if(confirm('Supprimer cette participation ?')) { document.cookie = 'participations=' + JSON.stringify(<?= json_encode(array_diff($historique, [$id])) ?>) + '; path=/; max-age=31536000'; location.reload(); }">Annuler</button>
                         </li>
                         <?php
+                        // Envoie de mail
+                        $to = $email;
+                        $subject = "Annulation de participation";
+                        $message = "Votre participation au trajet (ID: $id) a été annulée.";
+                        $headers = "From: noreply@ecoride.fr\r\n";
+                        $headers .= "Content-Type: text/plain; charset=UTF-8";
+                        mail($to, $subject, $message, $headers);
+                        if (filter_var($to, FILTER_VALIDATE_EMAIL)) { /* safe to send */ }
+
+
                         endif;
                         $stmt->close();
                         ?>
@@ -348,5 +424,6 @@ if (isset($_COOKIE['participations'])) {
             </div>
         </div>
     </div>
+  </div>      
 </body>
 </html>

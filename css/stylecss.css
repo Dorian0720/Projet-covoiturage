@@ -198,15 +198,18 @@
   }
   .examples-home-page .card-grid,
   .examples-home-page .card-grid-2 {
-<<<<<<< HEAD
+
     padding: 10px;
-=======
+
     padding: 8px;
->>>>>>> 407be434b0a66949fa9a9f579f465172092b7647
-    gap: 12px;
   }
   .profil-photo-header img {
     width: 40px;
     height: 40px;
   }
+}
+.profil-photo-header img {
+  max-width: 150px;
+  border-radius: 20%;
+  border: 2px solid #66bb6a; /* pour le style EcoRide 🌿 */
 }
